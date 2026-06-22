@@ -169,8 +169,8 @@ export function PalabraClave({ config }: { config: PalabraClaveConfig }) {
           </div>
         )}
         <div
-          className="flex w-full flex-col gap-1.5"
-          style={{ maxWidth: `min(92vw, ${len * 3.9}rem)` }}
+          className="flex flex-col gap-1.5"
+          style={{ width: `min(86vw, ${len * 3.9}rem)` }}
         >
           {grid.map((row, r) => (
             <div
