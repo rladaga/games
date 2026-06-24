@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, HelpCircle, RotateCcw } from "lucide-react";
@@ -23,6 +23,22 @@ export function GameShell({ level }: { level: Level }) {
   // Bumping this key remounts the game to restart it cleanly.
   const [round, setRound] = useState(0);
   const { theme } = level;
+
+  // Paint the page (html/body) with the level's background so any area beyond
+  // the game (e.g. mobile overscroll / browser chrome) shows the chosen color
+  // instead of the platform default.
+  useEffect(() => {
+    if (!theme.bgColor) return;
+    const root = document.documentElement;
+    const body = document.body;
+    const prev = { html: root.style.background, body: body.style.background };
+    root.style.background = theme.bgColor;
+    body.style.background = theme.bgColor;
+    return () => {
+      root.style.background = prev.html;
+      body.style.background = prev.body;
+    };
+  }, [theme.bgColor]);
 
   return (
     <main

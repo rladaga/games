@@ -75,7 +75,6 @@ body {
   background-image: var(--bg-image, none);
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
   /* Re-resolve --text here so children (e.g. board tiles) pick up the level's
      text color instead of the value already resolved on <body>. */
   color: var(--text);
