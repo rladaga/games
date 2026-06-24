@@ -216,7 +216,9 @@ function Preview({ level }: { level: Level }) {
       className="game-shell overflow-hidden rounded-[var(--radius-card)] border border-[var(--border)]"
       style={themeToCssVars(level.theme)}
     >
-      <div className="game-scrim max-h-[78vh] overflow-y-auto p-4">
+      <div
+        className={`max-h-[78vh] overflow-y-auto p-4${level.theme.bgImageUrl ? " game-scrim" : ""}`}
+      >
         {(level.theme.showTitle ?? true) && (
           <p className="mb-1 text-center font-[family-name:var(--font-display)] text-xs font-bold tracking-wide text-[var(--muted)]">
             {GAMES[level.gameSlug].name}

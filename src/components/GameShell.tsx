@@ -29,7 +29,9 @@ export function GameShell({ level }: { level: Level }) {
       className="game-shell min-h-dvh"
       style={themeToCssVars(theme)}
     >
-      <div className="game-scrim min-h-dvh flex flex-col">
+      <div
+        className={`min-h-dvh flex flex-col${theme.bgImageUrl ? " game-scrim" : ""}`}
+      >
         <header className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3 px-4 pt-4">
           <Link
             href="/"
