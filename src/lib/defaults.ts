@@ -20,6 +20,45 @@ export function blankConfig(game: GameSlug): GameConfig {
       };
     case "palabra-secreta":
       return { tema: "", respuesta: "", palabras: [], pistas: [] };
+    case "une-palabras":
+      return {
+        titulo: "",
+        pares: [
+          { izquierda: "", derecha: "" },
+          { izquierda: "", derecha: "" },
+        ],
+      };
+    case "adivina-personaje":
+      return {
+        respuesta: "",
+        alias: [],
+        pistas: ["", ""],
+        intentosMax: 5,
+        imagenUrl: null,
+      };
+    case "agilidad-mental":
+      return {
+        preguntas: [{ prompt: "", opciones: ["", ""], correcta: 0 }],
+        segundosPorPregunta: 8,
+        vidas: 3,
+      };
+    case "hechos-historicos":
+      return {
+        titulo: "",
+        eventos: [
+          { texto: "", anio: 0 },
+          { texto: "", anio: 0 },
+        ],
+      };
+    case "ranking":
+      return {
+        titulo: "",
+        items: [
+          { texto: "", imagenUrl: null },
+          { texto: "", imagenUrl: null },
+        ],
+        aleatorio: false,
+      };
   }
 }
 

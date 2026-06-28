@@ -5,10 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, HelpCircle, RotateCcw } from "lucide-react";
 import type {
+  AdivinaPersonajeConfig,
+  AgilidadMentalConfig,
   ConsensusConfig,
+  HechosHistoricosConfig,
   Level,
   PalabraClaveConfig,
   PalabraSecretaConfig,
+  RankingConfig,
+  UnePalabrasConfig,
 } from "@/lib/types";
 import { GAMES } from "@/lib/games";
 import { themeToCssVars } from "@/lib/theme";
@@ -16,6 +21,11 @@ import { Modal } from "@/components/ui/Modal";
 import { PalabraClave } from "@/components/games/PalabraClave";
 import { Consensus } from "@/components/games/Consensus";
 import { PalabraSecreta } from "@/components/games/PalabraSecreta";
+import { UnePalabras } from "@/components/games/UnePalabras";
+import { AdivinaPersonaje } from "@/components/games/AdivinaPersonaje";
+import { AgilidadMental } from "@/components/games/AgilidadMental";
+import { HechosHistoricos } from "@/components/games/HechosHistoricos";
+import { Ranking } from "@/components/games/Ranking";
 
 export function GameShell({ level }: { level: Level }) {
   const meta = GAMES[level.gameSlug];
@@ -108,6 +118,21 @@ export function GameShell({ level }: { level: Level }) {
           )}
           {level.gameSlug === "palabra-secreta" && (
             <PalabraSecreta config={level.config as PalabraSecretaConfig} />
+          )}
+          {level.gameSlug === "une-palabras" && (
+            <UnePalabras config={level.config as UnePalabrasConfig} />
+          )}
+          {level.gameSlug === "adivina-personaje" && (
+            <AdivinaPersonaje config={level.config as AdivinaPersonajeConfig} />
+          )}
+          {level.gameSlug === "agilidad-mental" && (
+            <AgilidadMental config={level.config as AgilidadMentalConfig} />
+          )}
+          {level.gameSlug === "hechos-historicos" && (
+            <HechosHistoricos config={level.config as HechosHistoricosConfig} />
+          )}
+          {level.gameSlug === "ranking" && (
+            <Ranking config={level.config as RankingConfig} />
           )}
         </div>
       </div>

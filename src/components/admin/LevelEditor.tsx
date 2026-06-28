@@ -5,10 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Save, Link2, Check, Eye } from "lucide-react";
 import type {
+  AdivinaPersonajeConfig,
+  AgilidadMentalConfig,
   ConsensusConfig,
+  HechosHistoricosConfig,
   Level,
   PalabraClaveConfig,
   PalabraSecretaConfig,
+  RankingConfig,
+  UnePalabrasConfig,
 } from "@/lib/types";
 import { GAMES } from "@/lib/games";
 import { themeToCssVars } from "@/lib/theme";
@@ -21,10 +26,20 @@ import {
   ConsensusForm,
   PalabraClaveForm,
   PalabraSecretaForm,
+  UnePalabrasForm,
+  AdivinaPersonajeForm,
+  AgilidadMentalForm,
+  HechosHistoricosForm,
+  RankingForm,
 } from "./ConfigForms";
 import { PalabraClave } from "@/components/games/PalabraClave";
 import { Consensus } from "@/components/games/Consensus";
 import { PalabraSecreta } from "@/components/games/PalabraSecreta";
+import { UnePalabras } from "@/components/games/UnePalabras";
+import { AdivinaPersonaje } from "@/components/games/AdivinaPersonaje";
+import { AgilidadMental } from "@/components/games/AgilidadMental";
+import { HechosHistoricos } from "@/components/games/HechosHistoricos";
+import { Ranking } from "@/components/games/Ranking";
 
 type Tab = "contenido" | "apariencia";
 
@@ -185,26 +200,31 @@ function ConfigSection({
   level: Level;
   set: (patch: Partial<Level>) => void;
 }) {
-  if (level.gameSlug === "palabra-clave")
-    return (
-      <PalabraClaveForm
-        config={level.config as PalabraClaveConfig}
-        onChange={(config) => set({ config })}
-      />
-    );
-  if (level.gameSlug === "consensus")
-    return (
-      <ConsensusForm
-        config={level.config as ConsensusConfig}
-        onChange={(config) => set({ config })}
-      />
-    );
-  return (
-    <PalabraSecretaForm
-      config={level.config as PalabraSecretaConfig}
-      onChange={(config) => set({ config })}
-    />
-  );
+  const onChange = (config: Level["config"]) => set({ config });
+  switch (level.gameSlug) {
+    case "palabra-clave":
+      return <PalabraClaveForm config={level.config as PalabraClaveConfig} onChange={onChange} />;
+    case "consensus":
+      return <ConsensusForm config={level.config as ConsensusConfig} onChange={onChange} />;
+    case "palabra-secreta":
+      return <PalabraSecretaForm config={level.config as PalabraSecretaConfig} onChange={onChange} />;
+    case "une-palabras":
+      return <UnePalabrasForm config={level.config as UnePalabrasConfig} onChange={onChange} />;
+    case "adivina-personaje":
+      return (
+        <AdivinaPersonajeForm config={level.config as AdivinaPersonajeConfig} onChange={onChange} />
+      );
+    case "agilidad-mental":
+      return (
+        <AgilidadMentalForm config={level.config as AgilidadMentalConfig} onChange={onChange} />
+      );
+    case "hechos-historicos":
+      return (
+        <HechosHistoricosForm config={level.config as HechosHistoricosConfig} onChange={onChange} />
+      );
+    case "ranking":
+      return <RankingForm config={level.config as RankingConfig} onChange={onChange} />;
+  }
 }
 
 function Preview({ level }: { level: Level }) {
@@ -243,6 +263,21 @@ function Preview({ level }: { level: Level }) {
           )}
           {level.gameSlug === "palabra-secreta" && (
             <PalabraSecreta config={level.config as PalabraSecretaConfig} />
+          )}
+          {level.gameSlug === "une-palabras" && (
+            <UnePalabras config={level.config as UnePalabrasConfig} />
+          )}
+          {level.gameSlug === "adivina-personaje" && (
+            <AdivinaPersonaje config={level.config as AdivinaPersonajeConfig} />
+          )}
+          {level.gameSlug === "agilidad-mental" && (
+            <AgilidadMental config={level.config as AgilidadMentalConfig} />
+          )}
+          {level.gameSlug === "hechos-historicos" && (
+            <HechosHistoricos config={level.config as HechosHistoricosConfig} />
+          )}
+          {level.gameSlug === "ranking" && (
+            <Ranking config={level.config as RankingConfig} />
           )}
         </div>
       </div>

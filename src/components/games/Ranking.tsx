@@ -1,0 +1,168 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import type { RankingConfig } from "@/lib/types";
+import { cn, shuffle } from "@/lib/utils";
+import { GameResult } from "./GameResult";
+
+interface Item {
+  id: number;
+  texto: string;
+  imagenUrl?: string | null;
+  ideal?: number;
+}
+
+export function Ranking({ config }: { config: RankingConfig }) {
+  const items = useMemo<Item[]>(
+    () =>
+      (config.items ?? [])
+        .map((it, id) => ({ id, texto: it.texto.trim(), imagenUrl: it.imagenUrl, ideal: it.ideal }))
+        .filter((it) => it.texto),
+    [config.items],
+  );
+
+  const queue = useMemo(
+    () => (config.aleatorio ? shuffle(items) : items),
+    [items, config.aleatorio],
+  );
+
+  const slots = items.length;
+  // slot (1..N) -> item id placed there
+  const [placed, setPlaced] = useState<Record<number, number>>({});
+  const placedCount = Object.keys(placed).length;
+  const current = queue[placedCount];
+  const done = placedCount >= slots && slots > 0;
+
+  function place(slot: number) {
+    if (!current || placed[slot] !== undefined) return;
+    setPlaced((p) => ({ ...p, [slot]: current.id }));
+  }
+
+  const itemById = (id: number) => items.find((it) => it.id === id);
+
+  // Optional scoring: only when every item declares an ideal rank.
+  const hasIdeal = items.length > 0 && items.every((it) => typeof it.ideal === "number");
+  const aciertos = hasIdeal
+    ? Object.entries(placed).filter(([slot, id]) => itemById(id)?.ideal === Number(slot)).length
+    : 0;
+
+  if (slots < 2) {
+    return (
+      <div className="card p-6 text-center text-sm text-[var(--muted)]">
+        Agregá al menos dos elementos para armar el ranking.
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-1 flex-col gap-4">
+      {config.titulo ? (
+        <div className="card p-4 text-center">
+          <h1 className="font-[family-name:var(--font-display)] text-lg font-bold sm:text-xl">
+            {config.titulo}
+          </h1>
+        </div>
+      ) : null}
+
+      {/* Elemento actual */}
+      {!done && current && (
+        <div className="card flex items-center gap-3 border-2 border-[var(--brand)] p-3 animate-pop">
+          {current.imagenUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={current.imagenUrl}
+              alt={current.texto}
+              className="h-14 w-14 shrink-0 rounded-[var(--radius-tile)] object-cover"
+            />
+          ) : null}
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--brand)]">
+              Ubicá este
+            </p>
+            <p className="truncate font-[family-name:var(--font-display)] text-lg font-bold">
+              {current.texto}
+            </p>
+          </div>
+          <span className="shrink-0 text-sm text-[var(--muted)]">
+            {placedCount + 1}/{slots}
+          </span>
+        </div>
+      )}
+
+      {/* Ranking */}
+      <div className="flex flex-col gap-2">
+        {Array.from({ length: slots }).map((_, i) => {
+          const slot = i + 1;
+          const itemId = placed[slot];
+          const item = itemId !== undefined ? itemById(itemId) : undefined;
+          const empty = item === undefined;
+          const correct = hasIdeal && done && item?.ideal === slot;
+          const wrong = hasIdeal && done && item && item.ideal !== slot;
+          return (
+            <button
+              key={slot}
+              type="button"
+              disabled={!empty || done}
+              onClick={() => place(slot)}
+              className={cn(
+                "flex min-h-13 items-center gap-3 rounded-[var(--radius-tile)] border px-3 py-2 text-left transition-all",
+                empty
+                  ? "border-dashed border-[var(--border)] bg-transparent hover:border-[var(--brand)] hover:bg-[var(--brand)]/5"
+                  : correct
+                    ? "border-transparent bg-[var(--good)]/15"
+                    : wrong
+                      ? "border-[var(--bad)] bg-[var(--bad)]/10"
+                      : "border-transparent bg-[var(--surface)]",
+              )}
+            >
+              <span
+                className={cn(
+                  "grid h-9 w-9 shrink-0 place-items-center rounded-full font-[family-name:var(--font-display)] text-base font-extrabold",
+                  empty
+                    ? "bg-[var(--bg-2)] text-[var(--muted)]"
+                    : "bg-[var(--brand)] text-[var(--brand-ink)]",
+                )}
+              >
+                {slot}
+              </span>
+              {item?.imagenUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={item.imagenUrl}
+                  alt={item.texto}
+                  className="h-9 w-9 shrink-0 rounded object-cover"
+                />
+              ) : null}
+              <span className={cn("flex-1 truncate font-semibold", empty && "text-[var(--muted)]")}>
+                {empty ? "Tocá para ubicar acá" : item?.texto}
+              </span>
+              {hasIdeal && done && item && item.ideal !== slot ? (
+                <span className="shrink-0 text-xs font-bold text-[var(--muted)]">
+                  → #{item.ideal}
+                </span>
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
+
+      {done && (
+        <GameResult
+          won={hasIdeal ? aciertos === slots : true}
+          title={
+            hasIdeal
+              ? aciertos === slots
+                ? "¡Ranking perfecto!"
+                : "¡Ranking completo!"
+              : "¡Ranking completo!"
+          }
+          reveal={
+            hasIdeal
+              ? `Acertaste ${aciertos} de ${slots} posiciones.`
+              : "Armaste tu top sin arrepentirte."
+          }
+        />
+      )}
+    </div>
+  );
+}

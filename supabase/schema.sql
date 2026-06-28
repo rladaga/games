@@ -7,7 +7,11 @@
 create table if not exists public.levels (
   id          text primary key,                 -- slug corto usado en /play/[id]
   game_slug   text not null
-              check (game_slug in ('palabra-secreta', 'consensus', 'palabra-clave')),
+              check (game_slug in (
+                'palabra-secreta', 'consensus', 'palabra-clave',
+                'une-palabras', 'adivina-personaje', 'agilidad-mental',
+                'hechos-historicos', 'ranking'
+              )),
   title       text not null default 'Nuevo nivel',
   status      text not null default 'draft'
               check (status in ('draft', 'published')),
@@ -19,6 +23,27 @@ create table if not exists public.levels (
 
 create index if not exists levels_game_slug_idx on public.levels (game_slug);
 create index if not exists levels_status_idx on public.levels (status);
+
+-- Si la tabla ya existía con menos juegos, `create table if not exists` no
+-- actualiza el CHECK. Lo recreamos de forma idempotente para incluir los nuevos.
+do $$
+declare c text;
+begin
+  for c in
+    select conname from pg_constraint
+    where conrelid = 'public.levels'::regclass
+      and contype = 'c'
+      and pg_get_constraintdef(oid) ilike '%game_slug%'
+  loop
+    execute format('alter table public.levels drop constraint %I', c);
+  end loop;
+  alter table public.levels add constraint levels_game_slug_check
+    check (game_slug in (
+      'palabra-secreta', 'consensus', 'palabra-clave',
+      'une-palabras', 'adivina-personaje', 'agilidad-mental',
+      'hechos-historicos', 'ranking'
+    ));
+end $$;
 
 -- Perfiles (rol admin) --------------------------------------------------------
 create table if not exists public.profiles (
