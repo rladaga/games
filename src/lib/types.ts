@@ -114,12 +114,15 @@ export interface AgilidadMentalConfig {
   vidas: number;
 }
 
-/** Hechos Históricos: put the events in chronological order. */
+/** Hechos Históricos: drag each event onto the circle next to its correct date. */
 export interface HechosHistoricosConfig {
-  /** Optional instruction shown above the list. */
+  /** Optional instruction shown above the timeline. */
   titulo?: string;
-  /** Order is graded against ascending `anio`. */
-  eventos: { texto: string; anio: number; detalle?: string }[];
+  /**
+   * Each event is a card (image + caption) the player must match to its year.
+   * The years, sorted ascending, form the timeline slots.
+   */
+  eventos: { texto: string; anio: number; imagenUrl?: string | null; detalle?: string }[];
 }
 
 /** Ranking / Tierlist: place items one at a time into a locked slot 1–N. */

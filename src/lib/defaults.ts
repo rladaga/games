@@ -46,8 +46,8 @@ export function blankConfig(game: GameSlug): GameConfig {
       return {
         titulo: "",
         eventos: [
-          { texto: "", anio: 0 },
-          { texto: "", anio: 0 },
+          { texto: "", anio: 0, imagenUrl: null },
+          { texto: "", anio: 0, imagenUrl: null },
         ],
       };
     case "ranking":

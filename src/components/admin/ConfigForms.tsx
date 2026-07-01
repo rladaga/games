@@ -552,7 +552,7 @@ export function HechosHistoricosForm({
         <span className="text-sm font-semibold">
           Eventos
           <span className="ml-2 font-normal text-[var(--muted)]">
-            (el año define el orden correcto)
+            (el jugador arrastra cada imagen a su año)
           </span>
         </span>
         {eventos.map((ev, i) => (
@@ -561,9 +561,9 @@ export function HechosHistoricosForm({
               <TextInput
                 value={ev.texto}
                 onChange={(e) => setEv(i, { texto: e.target.value })}
-                placeholder="Evento"
+                placeholder="Nombre del evento (ej: Llegada a América)"
               />
-              <div className="w-28 shrink-0">
+              <div className="w-24 shrink-0">
                 <NumberInput
                   value={ev.anio}
                   onChange={(e) => setEv(i, { anio: Number(e.target.value) })}
@@ -576,17 +576,17 @@ export function HechosHistoricosForm({
                 }
               />
             </div>
-            <TextInput
-              value={ev.detalle ?? ""}
-              onChange={(e) => setEv(i, { detalle: e.target.value })}
-              placeholder="Detalle opcional (se muestra al comprobar)"
-              className="text-sm"
+            <ImageInput
+              value={ev.imagenUrl}
+              onChange={(url) => setEv(i, { imagenUrl: url })}
             />
           </div>
         ))}
         <AddButton
           label="Agregar evento"
-          onClick={() => onChange({ ...config, eventos: [...eventos, { texto: "", anio: 0 }] })}
+          onClick={() =>
+            onChange({ ...config, eventos: [...eventos, { texto: "", anio: 0, imagenUrl: null }] })
+          }
         />
       </div>
     </div>

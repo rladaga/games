@@ -7,7 +7,7 @@ import { cn, normalize } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { GameResult } from "./GameResult";
 
-export function AdivinaPersonaje({ config }: { config: AdivinaPersonajeConfig }) {
+export function AdivinaPersonaje({ config, preview }: { config: AdivinaPersonajeConfig; preview?: boolean }) {
   const pistas = useMemo(
     () => (config.pistas ?? []).map((p) => p.trim()).filter(Boolean),
     [config.pistas],
@@ -116,7 +116,7 @@ export function AdivinaPersonaje({ config }: { config: AdivinaPersonajeConfig })
               value={guess}
               onChange={(e) => setGuess(e.target.value)}
               placeholder="¿Quién es el personaje?"
-              autoFocus
+              autoFocus={!preview}
               className={cn(
                 "h-12 flex-1 rounded-full border bg-[var(--surface)] px-5 text-[var(--text)] outline-none transition-colors",
                 "border-[var(--border)] focus:border-[var(--brand)]",

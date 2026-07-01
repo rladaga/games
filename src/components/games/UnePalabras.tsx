@@ -23,7 +23,16 @@ export function UnePalabras({ config }: { config: UnePalabrasConfig }) {
   );
 
   // Right column is shuffled once per mount (the shell remounts to restart).
-  const rightOrder = useMemo(() => shuffle(pairs), [pairs]);
+  // Deranged so no pair sits at its left-column row — otherwise a lucky
+  // shuffle could leave rows already aligned, making matches trivial.
+  const rightOrder = useMemo(() => {
+    if (pairs.length < 2) return pairs;
+    for (let attempt = 0; attempt < 20; attempt++) {
+      const s = shuffle(pairs);
+      if (s.every((p, i) => p.id !== pairs[i].id)) return s;
+    }
+    return shuffle(pairs);
+  }, [pairs]);
 
   const [matched, setMatched] = useState<Set<number>>(new Set());
   const [selLeft, setSelLeft] = useState<number | null>(null);

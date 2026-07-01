@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Heart } from "lucide-react";
 import type { AgilidadMentalConfig } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -24,22 +24,26 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
   const [phase, setPhase] = useState<"playing" | "feedback" | "over">("playing");
   const [won, setWon] = useState(false);
   const [timeLeft, setTimeLeft] = useState(totalSecs);
+  const deadline = useRef(0);
 
   const q = preguntas[idx];
 
-  // Countdown — runs only while a question is live. Cleared on answer/unmount.
+  // Countdown — timestamp-based so it stays accurate and the bar animates
+  // smoothly regardless of timer jitter. Runs only while a question is live.
   useEffect(() => {
     if (phase !== "playing") return;
+    deadline.current = Date.now() + totalSecs * 1000;
     const t = setInterval(() => {
-      setTimeLeft((tl) => Math.max(0, Math.round((tl - 0.1) * 10) / 10));
-    }, 100);
+      const remaining = Math.max(0, (deadline.current - Date.now()) / 1000);
+      setTimeLeft(remaining);
+      if (remaining <= 0) {
+        clearInterval(t);
+        answer(-1);
+      }
+    }, 50);
     return () => clearInterval(t);
-  }, [phase, idx]);
-
-  useEffect(() => {
-    if (phase === "playing" && timeLeft <= 0) answer(-1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeLeft, phase]);
+  }, [phase, idx]);
 
   function answer(opt: number) {
     if (phase !== "playing") return;

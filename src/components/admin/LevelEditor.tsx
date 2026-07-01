@@ -259,16 +259,16 @@ function Preview({ level }: { level: Level }) {
             <PalabraClave config={level.config as PalabraClaveConfig} />
           )}
           {level.gameSlug === "consensus" && (
-            <Consensus config={level.config as ConsensusConfig} />
+            <Consensus config={level.config as ConsensusConfig} preview />
           )}
           {level.gameSlug === "palabra-secreta" && (
-            <PalabraSecreta config={level.config as PalabraSecretaConfig} />
+            <PalabraSecreta config={level.config as PalabraSecretaConfig} preview />
           )}
           {level.gameSlug === "une-palabras" && (
             <UnePalabras config={level.config as UnePalabrasConfig} />
           )}
           {level.gameSlug === "adivina-personaje" && (
-            <AdivinaPersonaje config={level.config as AdivinaPersonajeConfig} />
+            <AdivinaPersonaje config={level.config as AdivinaPersonajeConfig} preview />
           )}
           {level.gameSlug === "agilidad-mental" && (
             <AgilidadMental config={level.config as AgilidadMentalConfig} />

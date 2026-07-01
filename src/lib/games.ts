@@ -93,14 +93,15 @@ export const GAMES: Record<GameSlug, GameMeta> = {
   "hechos-historicos": {
     slug: "hechos-historicos",
     name: "Hechos Históricos",
-    tagline: "Ordená la línea de tiempo",
+    tagline: "Cada hecho en su fecha",
     description:
-      "Ordená los eventos del más antiguo al más reciente. Cuando creas tenerlos en orden, comprobá tu línea de tiempo.",
+      "Una línea de tiempo con fechas y una bandeja de imágenes. Arrastrá o tocá cada imagen y soltala en el año que le corresponde.",
     instructions: [
-      "Mové los eventos con las flechas para ordenarlos cronológicamente.",
-      "Arriba el más antiguo, abajo el más reciente.",
-      "Tocá «Comprobar» para ver tu resultado.",
-      "Los aciertos se pintan de verde y se revela cada año.",
+      "Mirá las fechas ubicadas sobre la línea de tiempo.",
+      "Arrastrá una imagen de la bandeja hasta el círculo de su año.",
+      "También podés tocar una imagen y luego tocar su fecha.",
+      "Si acertás, la imagen queda fijada en esa fecha.",
+      "Ganás cuando ubicaste todas las imágenes.",
     ],
     accent: "#eab308",
   },

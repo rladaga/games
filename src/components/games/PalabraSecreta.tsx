@@ -20,7 +20,7 @@ function heatColor(c: number): string {
   return `hsl(${hue} 75% 52%)`;
 }
 
-export function PalabraSecreta({ config }: { config: PalabraSecretaConfig }) {
+export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConfig; preview?: boolean }) {
   const answer = useMemo(() => normalize(config.respuesta), [config.respuesta]);
 
   // Curated theme words: the only valid guesses, and the universe in which the
@@ -218,7 +218,7 @@ export function PalabraSecreta({ config }: { config: PalabraSecretaConfig }) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Tu palabra…"
-              autoFocus
+              autoFocus={!preview}
               className="h-12 flex-1 rounded-full border border-[var(--border)] bg-[var(--surface)] px-5 text-[var(--text)] outline-none focus:border-[var(--brand)]"
             />
             <Button type="submit" size="lg">

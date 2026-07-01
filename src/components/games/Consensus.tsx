@@ -13,7 +13,7 @@ interface Row {
   revealed: number; // letters auto-revealed on errors
 }
 
-export function Consensus({ config }: { config: ConsensusConfig }) {
+export function Consensus({ config, preview }: { config: ConsensusConfig; preview?: boolean }) {
   const sorted = useMemo(
     () => [...config.respuestas].sort((a, b) => b.popularidad - a.popularidad),
     [config.respuestas],
@@ -111,7 +111,7 @@ export function Consensus({ config }: { config: ConsensusConfig }) {
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
             placeholder="Escribí tu respuesta…"
-            autoFocus
+            autoFocus={!preview}
             className={cn(
               "h-12 flex-1 rounded-full border bg-[var(--surface)] px-5 text-[var(--text)] outline-none transition-colors",
               "border-[var(--border)] focus:border-[var(--brand)]",

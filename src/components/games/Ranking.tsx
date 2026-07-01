@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { RankingConfig } from "@/lib/types";
 import { cn, shuffle } from "@/lib/utils";
 import { GameResult } from "./GameResult";
+import { GameImage } from "./GameImage";
 
 interface Item {
   id: number;
@@ -67,14 +68,11 @@ export function Ranking({ config }: { config: RankingConfig }) {
       {/* Elemento actual */}
       {!done && current && (
         <div className="card flex items-center gap-3 border-2 border-[var(--brand)] p-3 animate-pop">
-          {current.imagenUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={current.imagenUrl}
-              alt={current.texto}
-              className="h-14 w-14 shrink-0 rounded-[var(--radius-tile)] object-cover"
-            />
-          ) : null}
+          <GameImage
+            src={current.imagenUrl}
+            alt={current.texto}
+            className="h-14 w-14 shrink-0 rounded-[var(--radius-tile)] object-cover"
+          />
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-wider text-[var(--brand)]">
               Ubicá este
@@ -125,14 +123,11 @@ export function Ranking({ config }: { config: RankingConfig }) {
               >
                 {slot}
               </span>
-              {item?.imagenUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={item.imagenUrl}
-                  alt={item.texto}
-                  className="h-9 w-9 shrink-0 rounded object-cover"
-                />
-              ) : null}
+              <GameImage
+                src={item?.imagenUrl}
+                alt={item?.texto ?? ""}
+                className="h-9 w-9 shrink-0 rounded object-cover"
+              />
               <span className={cn("flex-1 truncate font-semibold", empty && "text-[var(--muted)]")}>
                 {empty ? "Tocá para ubicar acá" : item?.texto}
               </span>
