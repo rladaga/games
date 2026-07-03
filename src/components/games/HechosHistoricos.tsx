@@ -122,69 +122,35 @@ export function HechosHistoricos({ config }: { config: HechosHistoricosConfig })
         </p>
       </div>
 
-      {/* Línea de tiempo */}
+      {/* Línea de tiempo (horizontal) */}
       <div ref={boardRef} className="relative py-1">
-        <div className="absolute bottom-2 left-1/2 top-2 w-2.5 -translate-x-1/2 rounded-full bg-[var(--timeline)]" />
-        <div className="relative flex flex-col gap-4">
+        {/* Barra horizontal, centrada en los círculos (h-14 → centro a 1.75rem). */}
+        <div className="pointer-events-none absolute inset-x-2 top-7 h-2 -translate-y-1/2 rounded-full bg-[var(--timeline)]" />
+        <div className="relative flex items-start justify-between gap-1">
           {slots.map((slot, i) => {
-            const onLeft = i % 2 === 0; // circle on the left, year hugs the bar on the right
             const ev = placed[i] !== undefined ? byId(placed[i]) : null;
             // Only the first and last years anchor the timeline; the rest stay
             // hidden until their event is placed correctly.
             const revealed = i === 0 || i === slots.length - 1 || placed[i] !== undefined;
-            const slotEl = (
-              <Slot
-                index={i}
-                ev={ev}
-                filled={!!ev}
-                hovered={hoverSlot === i}
-                error={errorSlot === i}
-                armed={selected !== null}
-                onTap={() => selected !== null && attempt(selected, i)}
-              />
-            );
-            const yearEl = (
-              <span
-                className={cn(
-                  "font-[family-name:var(--font-display)] text-2xl font-extrabold tabular-nums",
-                  revealed ? "text-[var(--year)]" : "text-[var(--muted)]",
-                )}
-              >
-                {revealed ? slot.anio : "?"}
-              </span>
-            );
             return (
-              <div key={i} className="grid grid-cols-2 items-center">
-                <div
+              <div key={i} className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
+                <Slot
+                  index={i}
+                  ev={ev}
+                  filled={!!ev}
+                  hovered={hoverSlot === i}
+                  error={errorSlot === i}
+                  armed={selected !== null}
+                  onTap={() => selected !== null && attempt(selected, i)}
+                />
+                <span
                   className={cn(
-                    "flex items-center gap-2 pr-5",
-                    onLeft ? "justify-start" : "justify-end",
+                    "font-[family-name:var(--font-display)] text-sm font-extrabold tabular-nums sm:text-base",
+                    revealed ? "text-[var(--year)]" : "text-[var(--muted)]",
                   )}
                 >
-                  {onLeft ? (
-                    <>
-                      {slotEl}
-                      <span className="h-0.5 flex-1 bg-[var(--border)]" />
-                    </>
-                  ) : (
-                    yearEl
-                  )}
-                </div>
-                <div
-                  className={cn(
-                    "flex items-center gap-2 pl-5",
-                    onLeft ? "justify-start" : "justify-end",
-                  )}
-                >
-                  {onLeft ? (
-                    yearEl
-                  ) : (
-                    <>
-                      <span className="h-0.5 flex-1 bg-[var(--border)]" />
-                      {slotEl}
-                    </>
-                  )}
-                </div>
+                  {revealed ? slot.anio : "?"}
+                </span>
               </div>
             );
           })}
@@ -266,7 +232,7 @@ function Slot({
       onClick={onTap}
       disabled={filled}
       className={cn(
-        "relative grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-full border-[3px] transition-all",
+        "relative grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full border-[3px] transition-all",
         filled
           ? "border-[var(--good)] bg-[var(--good)]/10"
           : "border-dashed border-[var(--text)]/40 bg-[var(--surface)]",
