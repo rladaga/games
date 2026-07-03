@@ -36,6 +36,7 @@ export function themeToCssVars(theme: Theme = {}): Vars {
   // Per-game accents. Default to a base token via globals.css, so they're only
   // emitted when explicitly overridden.
   if (theme.timelineColor) vars["--timeline"] = theme.timelineColor;
+  if (theme.yearColor) vars["--year"] = theme.yearColor;
   if (theme.timerColor) vars["--timer"] = theme.timerColor;
   if (theme.livesColor) vars["--lives"] = theme.livesColor;
   if (theme.hotColor) vars["--hot"] = theme.hotColor;

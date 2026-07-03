@@ -147,7 +147,7 @@ export function HechosHistoricos({ config }: { config: HechosHistoricosConfig })
               <span
                 className={cn(
                   "font-[family-name:var(--font-display)] text-2xl font-extrabold tabular-nums",
-                  revealed ? "text-[var(--heading)]" : "text-[var(--muted)]",
+                  revealed ? "text-[var(--year)]" : "text-[var(--muted)]",
                 )}
               >
                 {revealed ? slot.anio : "?"}

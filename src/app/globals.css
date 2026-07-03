@@ -30,6 +30,7 @@
   /* Per-game accents. Alias a base token by default so each game can be
      retinted independently without changing the base look. */
   --timeline: var(--brand);
+  --year: var(--heading);
   --timer: var(--good);
   --lives: var(--bad);
   --popularity: var(--accent);

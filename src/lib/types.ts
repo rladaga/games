@@ -37,6 +37,8 @@ export interface Theme {
   /* -- Per-game accents. All optional; each falls back to a base token. -- */
   /** Hechos Históricos: the central timeline bar. Falls back to brand. */
   timelineColor?: string;
+  /** Hechos Históricos: the year numbers. Falls back to heading. */
+  yearColor?: string;
   /** Agilidad Mental: the countdown progress bar. Falls back to good. */
   timerColor?: string;
   /** Agilidad Mental: the lives (hearts). Falls back to bad. */

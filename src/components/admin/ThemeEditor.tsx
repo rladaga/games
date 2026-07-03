@@ -39,7 +39,10 @@ const WARN_GAMES: GameSlug[] = ["palabra-clave"];
 const GAME_SECTIONS: Partial<Record<GameSlug, { title: string; slots: Slot[] }>> = {
   "hechos-historicos": {
     title: "Colores de Hechos Históricos",
-    slots: [{ key: "timelineColor", label: "Barra de tiempo", hint: "La línea vertical central." }],
+    slots: [
+      { key: "yearColor", label: "Años", hint: "Los números de año de la línea de tiempo." },
+      { key: "timelineColor", label: "Barra de tiempo", hint: "La línea vertical central." },
+    ],
   },
   "agilidad-mental": {
     title: "Colores de Agilidad Mental",
@@ -69,6 +72,7 @@ const GAME_SECTIONS: Partial<Record<GameSlug, { title: string; slots: Slot[] }>>
 const ALIAS: Partial<Record<keyof Theme, keyof Theme>> = {
   headingColor: "textColor",
   captionColor: "textColor",
+  yearColor: "headingColor",
   timelineColor: "brandColor",
   rankColor: "brandColor",
   timerColor: "goodColor",
