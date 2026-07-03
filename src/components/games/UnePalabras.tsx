@@ -82,7 +82,7 @@ export function UnePalabras({ config }: { config: UnePalabrasConfig }) {
     <div className="flex flex-1 flex-col gap-5">
       {config.titulo ? (
         <div className="card p-4 text-center">
-          <h1 className="font-[family-name:var(--font-display)] text-lg font-bold sm:text-xl">
+          <h1 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--heading)] sm:text-xl">
             {config.titulo}
           </h1>
         </div>

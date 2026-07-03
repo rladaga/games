@@ -174,6 +174,7 @@ export function LevelEditor({
               ) : (
                 <ThemeEditor
                   theme={level.theme}
+                  gameSlug={level.gameSlug}
                   onChange={(theme) => set({ theme })}
                 />
               )}

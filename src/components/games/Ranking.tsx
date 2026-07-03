@@ -10,14 +10,13 @@ interface Item {
   id: number;
   texto: string;
   imagenUrl?: string | null;
-  ideal?: number;
 }
 
 export function Ranking({ config }: { config: RankingConfig }) {
   const items = useMemo<Item[]>(
     () =>
       (config.items ?? [])
-        .map((it, id) => ({ id, texto: it.texto.trim(), imagenUrl: it.imagenUrl, ideal: it.ideal }))
+        .map((it, id) => ({ id, texto: it.texto.trim(), imagenUrl: it.imagenUrl }))
         .filter((it) => it.texto),
     [config.items],
   );
@@ -41,12 +40,6 @@ export function Ranking({ config }: { config: RankingConfig }) {
 
   const itemById = (id: number) => items.find((it) => it.id === id);
 
-  // Optional scoring: only when every item declares an ideal rank.
-  const hasIdeal = items.length > 0 && items.every((it) => typeof it.ideal === "number");
-  const aciertos = hasIdeal
-    ? Object.entries(placed).filter(([slot, id]) => itemById(id)?.ideal === Number(slot)).length
-    : 0;
-
   if (slots < 2) {
     return (
       <div className="card p-6 text-center text-sm text-[var(--muted)]">
@@ -59,7 +52,7 @@ export function Ranking({ config }: { config: RankingConfig }) {
     <div className="flex flex-1 flex-col gap-4">
       {config.titulo ? (
         <div className="card p-4 text-center">
-          <h1 className="font-[family-name:var(--font-display)] text-lg font-bold sm:text-xl">
+          <h1 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--heading)] sm:text-xl">
             {config.titulo}
           </h1>
         </div>
@@ -94,8 +87,6 @@ export function Ranking({ config }: { config: RankingConfig }) {
           const itemId = placed[slot];
           const item = itemId !== undefined ? itemById(itemId) : undefined;
           const empty = item === undefined;
-          const correct = hasIdeal && done && item?.ideal === slot;
-          const wrong = hasIdeal && done && item && item.ideal !== slot;
           return (
             <button
               key={slot}
@@ -106,11 +97,7 @@ export function Ranking({ config }: { config: RankingConfig }) {
                 "flex min-h-13 items-center gap-3 rounded-[var(--radius-tile)] border px-3 py-2 text-left transition-all",
                 empty
                   ? "border-dashed border-[var(--border)] bg-transparent hover:border-[var(--brand)] hover:bg-[var(--brand)]/5"
-                  : correct
-                    ? "border-transparent bg-[var(--good)]/15"
-                    : wrong
-                      ? "border-[var(--bad)] bg-[var(--bad)]/10"
-                      : "border-transparent bg-[var(--surface)]",
+                  : "border-transparent bg-[var(--surface)]",
               )}
             >
               <span
@@ -118,7 +105,7 @@ export function Ranking({ config }: { config: RankingConfig }) {
                   "grid h-9 w-9 shrink-0 place-items-center rounded-full font-[family-name:var(--font-display)] text-base font-extrabold",
                   empty
                     ? "bg-[var(--bg-2)] text-[var(--muted)]"
-                    : "bg-[var(--brand)] text-[var(--brand-ink)]",
+                    : "bg-[var(--rank)] text-[var(--brand-ink)]",
                 )}
               >
                 {slot}
@@ -128,14 +115,14 @@ export function Ranking({ config }: { config: RankingConfig }) {
                 alt={item?.texto ?? ""}
                 className="h-9 w-9 shrink-0 rounded object-cover"
               />
-              <span className={cn("flex-1 truncate font-semibold", empty && "text-[var(--muted)]")}>
+              <span
+                className={cn(
+                  "flex-1 truncate font-semibold",
+                  empty ? "text-[var(--muted)]" : "text-[var(--caption)]",
+                )}
+              >
                 {empty ? "Tocá para ubicar acá" : item?.texto}
               </span>
-              {hasIdeal && done && item && item.ideal !== slot ? (
-                <span className="shrink-0 text-xs font-bold text-[var(--muted)]">
-                  → #{item.ideal}
-                </span>
-              ) : null}
             </button>
           );
         })}
@@ -143,19 +130,9 @@ export function Ranking({ config }: { config: RankingConfig }) {
 
       {done && (
         <GameResult
-          won={hasIdeal ? aciertos === slots : true}
-          title={
-            hasIdeal
-              ? aciertos === slots
-                ? "¡Ranking perfecto!"
-                : "¡Ranking completo!"
-              : "¡Ranking completo!"
-          }
-          reveal={
-            hasIdeal
-              ? `Acertaste ${aciertos} de ${slots} posiciones.`
-              : "Armaste tu top sin arrepentirte."
-          }
+          won
+          title="¡Ranking completo!"
+          reveal="Armaste tu top sin arrepentirte."
         />
       )}
     </div>

@@ -77,7 +77,7 @@ export function Consensus({ config, preview }: { config: ConsensusConfig; previe
         <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
           Consensus
         </p>
-        <h1 className="mt-1 font-[family-name:var(--font-display)] text-xl font-bold leading-snug sm:text-2xl">
+        <h1 className="mt-1 font-[family-name:var(--font-display)] text-xl font-bold leading-snug text-[var(--heading)] sm:text-2xl">
           {config.pregunta}
         </h1>
       </div>
@@ -189,7 +189,7 @@ function AnswerRow({
         {open ? row.answer.texto : masked}
       </span>
       {open && (
-        <span className="shrink-0 rounded-full bg-[var(--accent)]/20 px-2.5 py-0.5 text-sm font-bold text-[var(--accent)]">
+        <span className="shrink-0 rounded-full bg-[var(--popularity)]/20 px-2.5 py-0.5 text-sm font-bold text-[var(--popularity)]">
           {row.answer.popularidad}%
         </span>
       )}

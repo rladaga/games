@@ -15,9 +15,9 @@ interface Guess {
 
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz".split("");
 
+// Blend between the "cold" (far) and "hot" (near) theme colors by closeness.
 function heatColor(c: number): string {
-  const hue = 220 - c * 220; // blue (cold) → red (hot)
-  return `hsl(${hue} 75% 52%)`;
+  return `color-mix(in oklab, var(--hot) ${Math.round(c * 100)}%, var(--cold))`;
 }
 
 export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConfig; preview?: boolean }) {
@@ -120,7 +120,7 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
         <p className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
           Tema
         </p>
-        <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold">
+        <h1 className="mt-1 font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--heading)]">
           {config.tema}
         </h1>
         <p className="mt-1 text-xs text-[var(--muted)]">

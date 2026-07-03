@@ -108,7 +108,7 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
               size={22}
               className={cn(
                 "transition-colors",
-                i < vidas ? "fill-[var(--bad)] text-[var(--bad)]" : "text-[var(--border)]",
+                i < vidas ? "fill-[var(--lives)] text-[var(--lives)]" : "text-[var(--border)]",
               )}
             />
           ))}
@@ -117,7 +117,7 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
 
       {/* Pregunta + estímulo */}
       <div className="card p-6 text-center">
-        <h1 className="font-[family-name:var(--font-display)] text-lg font-bold sm:text-xl">
+        <h1 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--heading)] sm:text-xl">
           {q.prompt}
         </h1>
         {q.stimulus?.texto ? (
@@ -133,7 +133,7 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
       {/* Barra de progreso */}
       <div className="h-2.5 w-full overflow-hidden rounded-full bg-[var(--surface)]">
         <div
-          className="h-full rounded-full bg-[var(--good)] transition-[width] duration-100 ease-linear"
+          className="h-full rounded-full bg-[var(--timer)] transition-[width] duration-100 ease-linear"
           style={{ width: `${pct}%` }}
         />
       </div>

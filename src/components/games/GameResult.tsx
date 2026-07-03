@@ -16,7 +16,7 @@ export function GameResult({
       <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-[var(--brand)]/15 text-[var(--brand)]">
         {won ? <PartyPopper size={24} /> : <Frown size={24} />}
       </div>
-      <h2 className="font-[family-name:var(--font-display)] text-xl font-bold">
+      <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-[var(--heading)]">
         {title}
       </h2>
       {reveal && <p className="mt-2 text-[var(--muted)]">{reveal}</p>}

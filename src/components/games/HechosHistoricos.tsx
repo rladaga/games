@@ -114,21 +114,24 @@ export function HechosHistoricos({ config }: { config: HechosHistoricosConfig })
   return (
     <div className="flex flex-1 flex-col gap-4">
       <div className="card p-4 text-center">
-        <h1 className="font-[family-name:var(--font-display)] text-lg font-bold sm:text-xl">
+        <h1 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--heading)] sm:text-xl">
           {config.titulo || "Hechos Históricos"}
         </h1>
         <p className="mt-1 text-xs text-[var(--accent)]">
-          Arrastrá o tocá la imagen hasta la fecha correcta
+          Ordená los hechos entre las dos fechas; cada año se revela al acertar
         </p>
       </div>
 
       {/* Línea de tiempo */}
       <div ref={boardRef} className="relative py-1">
-        <div className="absolute bottom-2 left-1/2 top-2 w-2.5 -translate-x-1/2 rounded-full bg-[var(--brand)]" />
+        <div className="absolute bottom-2 left-1/2 top-2 w-2.5 -translate-x-1/2 rounded-full bg-[var(--timeline)]" />
         <div className="relative flex flex-col gap-4">
           {slots.map((slot, i) => {
             const onLeft = i % 2 === 0; // circle on the left, year hugs the bar on the right
             const ev = placed[i] !== undefined ? byId(placed[i]) : null;
+            // Only the first and last years anchor the timeline; the rest stay
+            // hidden until their event is placed correctly.
+            const revealed = i === 0 || i === slots.length - 1 || placed[i] !== undefined;
             const slotEl = (
               <Slot
                 index={i}
@@ -141,8 +144,13 @@ export function HechosHistoricos({ config }: { config: HechosHistoricosConfig })
               />
             );
             const yearEl = (
-              <span className="font-[family-name:var(--font-display)] text-2xl font-extrabold tabular-nums">
-                {slot.anio}
+              <span
+                className={cn(
+                  "font-[family-name:var(--font-display)] text-2xl font-extrabold tabular-nums",
+                  revealed ? "text-[var(--heading)]" : "text-[var(--muted)]",
+                )}
+              >
+                {revealed ? slot.anio : "?"}
               </span>
             );
             return (
@@ -210,7 +218,7 @@ export function HechosHistoricos({ config }: { config: HechosHistoricosConfig })
                   )}
                 >
                   <CardThumb ev={card} />
-                  <span className="line-clamp-2 text-center text-[11px] font-semibold leading-tight">
+                  <span className="line-clamp-2 text-center text-[11px] font-semibold leading-tight text-[var(--caption)]">
                     {card.texto}
                   </span>
                 </button>

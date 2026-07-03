@@ -635,19 +635,6 @@ export function RankingForm({
                 onChange={(e) => setItem(i, { texto: e.target.value })}
                 placeholder="Elemento"
               />
-              <div className="flex w-28 shrink-0 items-center gap-1">
-                <NumberInput
-                  min={1}
-                  max={items.length}
-                  value={it.ideal ?? ""}
-                  onChange={(e) =>
-                    setItem(i, {
-                      ideal: e.target.value === "" ? undefined : Number(e.target.value),
-                    })
-                  }
-                  placeholder="Pos."
-                />
-              </div>
               <RemoveButton
                 onClick={() =>
                   onChange({ ...config, items: items.filter((_, idx) => idx !== i) })
@@ -662,8 +649,7 @@ export function RankingForm({
           onClick={() => onChange({ ...config, items: [...items, { texto: "", imagenUrl: null }] })}
         />
         <p className="text-xs text-[var(--muted)]">
-          La columna «Pos.» es opcional: si todos los elementos tienen una posición ideal, el juego
-          puntúa los aciertos. Si la dejás vacía, es un ranking libre (sin puntaje).
+          Es un ranking subjetivo: no hay respuesta correcta ni puntaje. Cada quien arma su top.
         </p>
       </div>
     </div>

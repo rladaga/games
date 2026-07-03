@@ -22,12 +22,26 @@ export function themeToCssVars(theme: Theme = {}): Vars {
   if (theme.borderColor) vars["--border"] = theme.borderColor;
   if (theme.textColor) vars["--text"] = theme.textColor;
   if (theme.mutedColor) vars["--muted"] = theme.mutedColor;
+  // Heading/caption default to the text color via globals.css (`--heading:
+  // var(--text)`), so they're only emitted when explicitly overridden.
+  if (theme.headingColor) vars["--heading"] = theme.headingColor;
+  if (theme.captionColor) vars["--caption"] = theme.captionColor;
   if (theme.brandColor) vars["--brand"] = theme.brandColor;
   if (theme.brandInkColor) vars["--brand-ink"] = theme.brandInkColor;
   if (theme.accentColor) vars["--accent"] = theme.accentColor;
   if (theme.goodColor) vars["--good"] = theme.goodColor;
   if (theme.warnColor) vars["--warn"] = theme.warnColor;
   if (theme.badColor) vars["--bad"] = theme.badColor;
+
+  // Per-game accents. Default to a base token via globals.css, so they're only
+  // emitted when explicitly overridden.
+  if (theme.timelineColor) vars["--timeline"] = theme.timelineColor;
+  if (theme.timerColor) vars["--timer"] = theme.timerColor;
+  if (theme.livesColor) vars["--lives"] = theme.livesColor;
+  if (theme.hotColor) vars["--hot"] = theme.hotColor;
+  if (theme.coldColor) vars["--cold"] = theme.coldColor;
+  if (theme.popularityColor) vars["--popularity"] = theme.popularityColor;
+  if (theme.rankColor) vars["--rank"] = theme.rankColor;
 
   return vars;
 }

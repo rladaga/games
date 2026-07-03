@@ -72,7 +72,7 @@ export function AdivinaPersonaje({ config, preview }: { config: AdivinaPersonaje
           </div>
         ) : null}
         {status !== "playing" && (
-          <h1 className="mt-3 font-[family-name:var(--font-display)] text-2xl font-bold">
+          <h1 className="mt-3 font-[family-name:var(--font-display)] text-2xl font-bold text-[var(--heading)]">
             {config.respuesta}
           </h1>
         )}

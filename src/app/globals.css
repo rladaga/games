@@ -14,6 +14,10 @@
   --border: #2c2c40;
   --text: #f4f4f8;
   --muted: #9a9ab0;
+  /* Semantic text roles. Alias --text by default so they can be overridden per
+     level without changing the base look (see lib/theme.ts). */
+  --heading: var(--text);
+  --caption: var(--text);
 
   --brand: #7c5cff;
   --brand-ink: #ffffff;
@@ -22,6 +26,16 @@
   --good: #2ecc71;
   --warn: #f4c542;
   --bad: #6b7280;
+
+  /* Per-game accents. Alias a base token by default so each game can be
+     retinted independently without changing the base look. */
+  --timeline: var(--brand);
+  --timer: var(--good);
+  --lives: var(--bad);
+  --popularity: var(--accent);
+  --rank: var(--brand);
+  --hot: #e5484d;
+  --cold: #4f7cff;
 
   --radius: 16px;
   --radius-sm: 10px;
@@ -39,6 +53,8 @@
   --color-border: var(--border);
   --color-text: var(--text);
   --color-muted: var(--muted);
+  --color-heading: var(--heading);
+  --color-caption: var(--caption);
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
   --color-accent: var(--accent);

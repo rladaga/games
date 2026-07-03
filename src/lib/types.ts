@@ -23,6 +23,10 @@ export interface Theme {
   borderColor?: string;
   textColor?: string;
   mutedColor?: string;
+  /** Titles / questions / big display numbers. Falls back to textColor. */
+  headingColor?: string;
+  /** Small labels under images/thumbnails. Falls back to textColor. */
+  captionColor?: string;
   brandColor?: string;
   brandInkColor?: string;
   accentColor?: string;
@@ -30,6 +34,21 @@ export interface Theme {
   goodColor?: string;
   warnColor?: string;
   badColor?: string;
+  /* -- Per-game accents. All optional; each falls back to a base token. -- */
+  /** Hechos Históricos: the central timeline bar. Falls back to brand. */
+  timelineColor?: string;
+  /** Agilidad Mental: the countdown progress bar. Falls back to good. */
+  timerColor?: string;
+  /** Agilidad Mental: the lives (hearts). Falls back to bad. */
+  livesColor?: string;
+  /** Palabra Secreta: distance indicator when hot/close. */
+  hotColor?: string;
+  /** Palabra Secreta: distance indicator when cold/far. */
+  coldColor?: string;
+  /** Consensus: the popularity percentage badge. Falls back to accent. */
+  popularityColor?: string;
+  /** Ranking: the position number badge. Falls back to brand. */
+  rankColor?: string;
   logoUrl?: string | null;
   /** Optional title shown under the logo on the game screen. */
   showTitle?: boolean;
@@ -129,10 +148,10 @@ export interface HechosHistoricosConfig {
 export interface RankingConfig {
   titulo: string;
   /**
-   * Items revealed one at a time. `slots` = items.length. If every item has an
-   * `ideal` rank, the board is scored by closeness; otherwise it's a free ranking.
+   * Items revealed one at a time. `slots` = items.length. It's a subjective
+   * ranking — there is no right answer and no scoring.
    */
-  items: { texto: string; imagenUrl?: string | null; ideal?: number }[];
+  items: { texto: string; imagenUrl?: string | null }[];
   /** Randomize the reveal order. */
   aleatorio?: boolean;
 }
