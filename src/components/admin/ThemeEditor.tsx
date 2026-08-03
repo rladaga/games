@@ -56,6 +56,7 @@ const GAME_SECTIONS: Partial<Record<GameSlug, { title: string; slots: Slot[] }>>
     slots: [
       { key: "hotColor", label: "Cerca (caliente)", hint: "Cuando el intento está cerca de la palabra." },
       { key: "coldColor", label: "Lejos (frío)" },
+      { key: "winnerColor", label: "Palabra ganadora", hint: "Color del texto cuando se descubre la palabra." },
     ],
   },
   consensus: {
@@ -78,6 +79,7 @@ const ALIAS: Partial<Record<keyof Theme, keyof Theme>> = {
   timerColor: "goodColor",
   livesColor: "badColor",
   popularityColor: "accentColor",
+  winnerColor: "goodColor",
 };
 
 // Slots with a fixed default that isn't in DEFAULT_THEME.

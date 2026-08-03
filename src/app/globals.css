@@ -37,6 +37,7 @@
   --rank: var(--brand);
   --hot: #e5484d;
   --cold: #4f7cff;
+  --winner: var(--good);
 
   --radius: 16px;
   --radius-sm: 10px;

@@ -180,12 +180,20 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
                   : "border-[var(--border)] bg-[var(--surface)]",
               )}
             >
-              <span className="flex-1 truncate font-[family-name:var(--font-display)] font-semibold">
+              <span
+                className={cn(
+                  "flex-1 truncate font-[family-name:var(--font-display)] font-semibold",
+                  isWin && "text-[var(--winner)]",
+                )}
+              >
                 {g.text}
               </span>
               {!isWin && (
                 <>
-                  <span className="text-sm font-bold tabular-nums text-[var(--muted)]">
+                  <span
+                    className="text-base font-bold tabular-nums"
+                    style={{ color: heatColor(c) }}
+                  >
                     {g.wordsBetween}
                   </span>
                   <span
@@ -201,7 +209,7 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
                 </>
               )}
               {isWin && (
-                <span className="text-sm font-bold text-[var(--good)]">✓</span>
+                <span className="text-sm font-bold text-[var(--winner)]">✓</span>
               )}
             </div>
           );
@@ -241,7 +249,7 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
           reveal={
             <>
               Era{" "}
-              <strong className="uppercase text-[var(--brand)]">{answer}</strong>{" "}
+              <strong className="uppercase text-[var(--winner)]">{answer}</strong>{" "}
               en {guesses.length} intento{guesses.length === 1 ? "" : "s"}.
             </>
           }

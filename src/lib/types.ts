@@ -47,6 +47,8 @@ export interface Theme {
   hotColor?: string;
   /** Palabra Secreta: distance indicator when cold/far. */
   coldColor?: string;
+  /** Palabra Secreta: the winning word text once discovered. Falls back to good. */
+  winnerColor?: string;
   /** Consensus: the popularity percentage badge. Falls back to accent. */
   popularityColor?: string;
   /** Ranking: the position number badge. Falls back to brand. */
