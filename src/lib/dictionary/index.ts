@@ -78,19 +78,20 @@ function insertionIndex(word: string): number {
 }
 
 /**
- * Estimated number of dictionary words strictly between `guess` and `answer`,
- * plus the direction the answer lies relative to the guess (alphabetically).
+ * Estimated number of dictionary positions between `guess` and `answer`
+ * (0 sólo si son la misma palabra, 1 si son contiguas), plus the direction
+ * the answer lies relative to the guess (alphabetically).
  */
 export function distanceBetween(
   guess: string,
   answer: string,
-): { wordsBetween: number; direction: "before" | "after" | "equal" } {
+): { distance: number; direction: "before" | "after" | "equal" } {
   const gi = insertionIndex(guess);
   const ai = insertionIndex(answer);
   const cmp = normalize(guess).localeCompare(normalize(answer), "es");
-  if (cmp === 0) return { wordsBetween: 0, direction: "equal" };
+  if (cmp === 0) return { distance: 0, direction: "equal" };
   return {
-    wordsBetween: Math.max(0, Math.abs(ai - gi) - 1),
+    distance: Math.max(1, Math.abs(ai - gi)),
     direction: cmp < 0 ? "after" : "before",
   };
 }

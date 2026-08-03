@@ -9,7 +9,8 @@ import { GameResult } from "./GameResult";
 
 interface Guess {
   text: string;
-  wordsBetween: number;
+  /** Posiciones de distancia hasta la respuesta en la lista del tema (0 = acertaste). */
+  distance: number;
   direction: "before" | "after" | "equal";
 }
 
@@ -87,7 +88,7 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
 
     if (text === answer) {
       setGuesses((g) =>
-        [...g, { text, wordsBetween: 0, direction: "equal" as const }].sort(
+        [...g, { text, distance: 0, direction: "equal" as const }].sort(
           (a, b) => a.text.localeCompare(b.text, "es"),
         ),
       );
@@ -97,10 +98,11 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
     }
 
     const gi = themeWords.indexOf(text);
-    const wordsBetween = Math.max(0, Math.abs(gi - answerIdx) - 1);
+    // Distancia en posiciones: 1 = palabra contigua a la respuesta, 0 sólo si acertó.
+    const distance = Math.abs(gi - answerIdx);
     const direction: Guess["direction"] = gi < answerIdx ? "after" : "before";
     setGuesses((g) =>
-      [...g, { text, wordsBetween, direction }].sort((a, b) =>
+      [...g, { text, distance, direction }].sort((a, b) =>
         a.text.localeCompare(b.text, "es"),
       ),
     );
@@ -108,8 +110,8 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
   }
 
   // Closeness relative to the size of the theme list.
-  const closeness = (wordsBetween: number) =>
-    Math.max(0, 1 - wordsBetween / Math.max(themeWords.length - 1, 1));
+  const closeness = (distance: number) =>
+    Math.max(0, 1 - (distance - 1) / Math.max(themeWords.length - 2, 1));
 
   const maxHints =
     (config.pistas?.length ?? answer.replace(/\s/g, "").length) || 0;
@@ -168,7 +170,7 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
           </p>
         )}
         {guesses.map((g) => {
-          const c = closeness(g.wordsBetween);
+          const c = closeness(g.distance);
           const isWin = g.direction === "equal";
           return (
             <div
@@ -194,7 +196,7 @@ export function PalabraSecreta({ config, preview }: { config: PalabraSecretaConf
                     className="text-base font-bold tabular-nums"
                     style={{ color: heatColor(c) }}
                   >
-                    {g.wordsBetween}
+                    {g.distance}
                   </span>
                   <span
                     className="grid h-7 w-7 place-items-center rounded-full text-white"
