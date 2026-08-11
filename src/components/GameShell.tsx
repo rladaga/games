@@ -98,9 +98,12 @@ export function GameShell({ level }: { level: Level }) {
             <Image
               src={theme.logoUrl}
               alt="Logo"
-              width={240}
-              height={80}
-              className="h-14 w-auto object-contain sm:h-16"
+              width={480}
+              height={160}
+              // Alto fijo: así un logo cuadrado o alto tampoco queda diminuto.
+              // El ancho crece libre hasta el borde y object-contain evita que
+              // un logo muy apaisado se deforme al toparse con el límite.
+              className="h-16 w-auto max-w-full object-contain sm:h-20"
               unoptimized
             />
           </div>

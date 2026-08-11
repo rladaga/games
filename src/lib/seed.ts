@@ -114,6 +114,13 @@ export const SEED_LEVELS: Level[] = [
           opciones: ["Verde", "Azul", "Violeta"],
           correcta: 1,
         },
+        {
+          prompt: "¿En qué río está la ciudad de Rosario?",
+          opciones: [],
+          correcta: 0,
+          respuesta: "Paraná",
+          alias: ["Río Paraná"],
+        },
       ],
     },
   },

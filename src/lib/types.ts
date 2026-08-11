@@ -119,17 +119,25 @@ export interface AdivinaPersonajeConfig {
   imagenUrl?: string | null;
 }
 
-/** A single timed multiple-choice question. */
+/** A single timed question: multiple choice, or typed if it has no options. */
 export interface QuizQuestion {
   prompt: string;
   /** Optional big colored word (Stroop-style stimulus). */
   stimulus?: { texto: string; color?: string };
+  /**
+   * Multiple-choice options. With fewer than two the question becomes a typed
+   * one and the player writes the answer, checked against `respuesta`/`alias`.
+   */
   opciones: string[];
-  /** Index into `opciones` of the correct answer. */
+  /** Index into `opciones` of the correct answer. Unused when typed. */
   correcta: number;
+  /** Typed questions: the expected answer. */
+  respuesta?: string;
+  /** Typed questions: alternative accepted spellings. */
+  alias?: string[];
 }
 
-/** Agilidad Mental: timed multiple-choice quiz with lives. */
+/** Agilidad Mental: timed quiz with lives. */
 export interface AgilidadMentalConfig {
   preguntas: QuizQuestion[];
   /** Countdown per question, in seconds. */

@@ -10,12 +10,19 @@ import { shortId } from "@/lib/utils";
 export function ImageInput({
   value,
   onChange,
+  minHeight,
 }: {
   value: string | null | undefined;
   onChange: (url: string | null) => void;
+  /** Warn when the image is shorter than this (px). Vector files are exempt. */
+  minHeight?: number;
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [size, setSize] = useState<{ w: number; h: number } | null>(null);
+
+  const isVector = !!value && /\.svg($|\?)/i.test(value);
+  const lowRes = !!minHeight && !isVector && !!size && size.h < minHeight;
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -46,11 +53,19 @@ export function ImageInput({
         <div className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--bg-2)] p-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
+            key={value}
             src={value}
             alt="preview"
+            onLoad={(e) =>
+              setSize({
+                w: e.currentTarget.naturalWidth,
+                h: e.currentTarget.naturalHeight,
+              })
+            }
             className="h-10 w-16 rounded object-contain"
           />
           <span className="flex-1 truncate text-xs text-[var(--muted)]">
+            {size && !isVector ? `${size.w}×${size.h} px — ` : ""}
             {value}
           </span>
           <button
@@ -74,6 +89,12 @@ export function ImageInput({
           <input type="file" accept="image/*" onChange={onFile} className="hidden" />
         </label>
       </div>
+      {lowRes && (
+        <span className="text-xs text-[var(--warn)]">
+          ⚠ La imagen tiene {size!.h} px de alto: se va a ver borrosa o chica.
+          Usá una de al menos {minHeight} px de alto (o un SVG).
+        </span>
+      )}
       {error && <span className="text-xs text-[var(--bad)]">{error}</span>}
     </div>
   );

@@ -1,4 +1,5 @@
-import type { GameMeta, GameSlug } from "./types";
+import type { GameMeta, GameSlug, QuizQuestion } from "./types";
+import { normalize } from "./utils";
 
 export const GAMES: Record<GameSlug, GameMeta> = {
   "palabra-secreta": {
@@ -85,6 +86,7 @@ export const GAMES: Record<GameSlug, GameMeta> = {
     instructions: [
       "Cada pregunta tiene un tiempo límite que se agota.",
       "Tocá la opción correcta antes de que termine el tiempo.",
+      "Algunas preguntas no traen opciones: escribí la respuesta y enviala.",
       "Si fallás o se acaba el tiempo, perdés una vida.",
       "El juego termina al quedarte sin vidas o al responder todas.",
     ],
@@ -125,4 +127,25 @@ export const GAME_LIST = Object.values(GAMES);
 
 export function getGame(slug: string): GameMeta | undefined {
   return GAMES[slug as GameSlug];
+}
+
+/* ------------------------- Agilidad Mental helpers ------------------------ */
+
+/**
+ * A question is answered by typing when it doesn't offer at least two options.
+ * Shared by the game and the admin form so both agree on the mode.
+ */
+export function isTypedQuestion(q: QuizQuestion): boolean {
+  return (q.opciones ?? []).filter((o) => o.trim()).length < 2;
+}
+
+/** Normalized list of answers accepted for a typed question. */
+export function acceptedAnswers(q: QuizQuestion): string[] {
+  return [q.respuesta ?? "", ...(q.alias ?? [])].map(normalize).filter(Boolean);
+}
+
+/** A question is playable if it has a prompt and a way to be answered. */
+export function isPlayableQuestion(q: QuizQuestion): boolean {
+  if (!q.prompt.trim()) return false;
+  return isTypedQuestion(q) ? acceptedAnswers(q).length > 0 : true;
 }

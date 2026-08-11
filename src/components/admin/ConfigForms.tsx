@@ -425,6 +425,8 @@ export function AgilidadMentalForm({
         <span className="text-sm font-semibold">Preguntas</span>
         {preguntas.map((q, i) => {
           const opciones = q.opciones ?? [];
+          // Modo estructural: sin lista de opciones, se responde escribiendo.
+          const escrita = opciones.length < 2;
           return (
             <div
               key={i}
@@ -468,44 +470,91 @@ export function AgilidadMentalForm({
                 </div>
               </div>
 
-              {/* Opciones con radio de correcta */}
-              <div className="flex flex-col gap-1.5">
-                {opciones.map((op, j) => (
-                  <div key={j} className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      name={`correcta-${i}`}
-                      checked={q.correcta === j}
-                      onChange={() => setQ(i, { correcta: j })}
-                      className="h-4 w-4 shrink-0 accent-[var(--brand)]"
-                      aria-label="Marcar como correcta"
-                    />
-                    <TextInput
-                      value={op}
-                      onChange={(e) =>
-                        setQ(i, {
-                          opciones: opciones.map((o, idx) => (idx === j ? e.target.value : o)),
-                        })
-                      }
-                      placeholder={`Opción ${j + 1}`}
-                      className="text-sm"
-                    />
-                    <RemoveButton
-                      onClick={() =>
-                        setQ(i, {
-                          opciones: opciones.filter((_, idx) => idx !== j),
-                          correcta: q.correcta >= opciones.length - 1 ? 0 : q.correcta,
-                        })
-                      }
-                    />
-                  </div>
-                ))}
-                <AddButton
-                  small
-                  label="Agregar opción"
-                  onClick={() => setQ(i, { opciones: [...opciones, ""] })}
+              {/* Modo de respuesta */}
+              <div className="flex gap-1 rounded-xl border border-[var(--border)] p-1">
+                <ModeButton
+                  active={!escrita}
+                  label="Opciones"
+                  onClick={() =>
+                    setQ(i, {
+                      opciones: opciones.length >= 2 ? opciones : ["", ""],
+                      correcta: 0,
+                    })
+                  }
+                />
+                <ModeButton
+                  active={escrita}
+                  label="Respuesta escrita"
+                  onClick={() => setQ(i, { opciones: [], correcta: 0 })}
                 />
               </div>
+
+              {escrita ? (
+                /* El jugador tipea la respuesta */
+                <div className="flex flex-col gap-1.5">
+                  <TextInput
+                    value={q.respuesta ?? ""}
+                    onChange={(e) => setQ(i, { respuesta: e.target.value })}
+                    placeholder="Respuesta correcta. Ej: León"
+                    className="text-sm"
+                  />
+                  <TextInput
+                    value={(q.alias ?? []).join(", ")}
+                    onChange={(e) =>
+                      setQ(i, {
+                        alias: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                      })
+                    }
+                    placeholder="Alias / variantes aceptadas (coma)"
+                    className="text-sm"
+                  />
+                  <span className="text-xs text-[var(--muted)]">
+                    No importan mayúsculas ni acentos.
+                  </span>
+                </div>
+              ) : (
+                /* Opciones con radio de correcta */
+                <div className="flex flex-col gap-1.5">
+                  {opciones.map((op, j) => (
+                    <div key={j} className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name={`correcta-${i}`}
+                        checked={q.correcta === j}
+                        onChange={() => setQ(i, { correcta: j })}
+                        className="h-4 w-4 shrink-0 accent-[var(--brand)]"
+                        aria-label="Marcar como correcta"
+                      />
+                      <TextInput
+                        value={op}
+                        onChange={(e) =>
+                          setQ(i, {
+                            opciones: opciones.map((o, idx) => (idx === j ? e.target.value : o)),
+                          })
+                        }
+                        placeholder={`Opción ${j + 1}`}
+                        className="text-sm"
+                      />
+                      {/* Nunca por debajo de dos: se cambia de modo a mano. */}
+                      {opciones.length > 2 && (
+                        <RemoveButton
+                          onClick={() =>
+                            setQ(i, {
+                              opciones: opciones.filter((_, idx) => idx !== j),
+                              correcta: q.correcta >= opciones.length - 1 ? 0 : q.correcta,
+                            })
+                          }
+                        />
+                      )}
+                    </div>
+                  ))}
+                  <AddButton
+                    small
+                    label="Agregar opción"
+                    onClick={() => setQ(i, { opciones: [...opciones, ""] })}
+                  />
+                </div>
+              )}
             </div>
           );
         })}
@@ -666,6 +715,31 @@ function RemoveButton({ onClick }: { onClick: () => void }) {
       className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-[var(--muted)] hover:text-[var(--bad)]"
     >
       <Trash2 size={16} />
+    </button>
+  );
+}
+
+/** Segmented switch used to pick how a question is answered. */
+function ModeButton({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition-colors ${
+        active
+          ? "bg-[var(--brand)] text-[var(--brand-ink)]"
+          : "text-[var(--muted)] hover:text-[var(--text)]"
+      }`}
+    >
+      {label}
     </button>
   );
 }

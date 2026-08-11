@@ -3,15 +3,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Heart } from "lucide-react";
 import type { AgilidadMentalConfig } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { acceptedAnswers, isPlayableQuestion, isTypedQuestion } from "@/lib/games";
+import { cn, normalize } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import { GameResult } from "./GameResult";
 
-export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
+export function AgilidadMental({
+  config,
+  preview,
+}: {
+  config: AgilidadMentalConfig;
+  preview?: boolean;
+}) {
   const preguntas = useMemo(
-    () =>
-      (config.preguntas ?? []).filter(
-        (q) => q.prompt.trim() && q.opciones.filter((o) => o.trim()).length >= 2,
-      ),
+    () => (config.preguntas ?? []).filter(isPlayableQuestion),
     [config.preguntas],
   );
   const totalSecs = config.segundosPorPregunta || 8;
@@ -21,12 +26,15 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
   const [vidas, setVidas] = useState(vidasIniciales);
   const [score, setScore] = useState(0);
   const [chosen, setChosen] = useState<number | null>(null);
+  const [typed, setTyped] = useState("");
+  const [acerto, setAcerto] = useState(false);
   const [phase, setPhase] = useState<"playing" | "feedback" | "over">("playing");
   const [won, setWon] = useState(false);
   const [timeLeft, setTimeLeft] = useState(totalSecs);
   const deadline = useRef(0);
 
   const q = preguntas[idx];
+  const escrita = q ? isTypedQuestion(q) : false;
 
   // Countdown — timestamp-based so it stays accurate and the bar animates
   // smoothly regardless of timer jitter. Runs only while a question is live.
@@ -38,22 +46,21 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
       setTimeLeft(remaining);
       if (remaining <= 0) {
         clearInterval(t);
-        answer(-1);
+        resolve(false);
       }
     }, 50);
     return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, idx]);
 
-  function answer(opt: number) {
+  /** Close the current question, show feedback, then advance or end. */
+  function resolve(correct: boolean) {
     if (phase !== "playing") return;
-    const correct = opt === q.correcta;
-    setChosen(opt);
+    setAcerto(correct);
     setPhase("feedback");
 
-    const nextScore = correct ? score + 1 : score;
     const nextVidas = correct ? vidas : vidas - 1;
-    if (correct) setScore(nextScore);
+    if (correct) setScore(score + 1);
     else setVidas(nextVidas);
 
     setTimeout(() => {
@@ -66,16 +73,30 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
       } else {
         setIdx(idx + 1);
         setChosen(null);
+        setTyped("");
         setTimeLeft(totalSecs);
         setPhase("playing");
       }
-    }, 800);
+    }, escrita ? 1200 : 800);
+  }
+
+  function answer(opt: number) {
+    if (phase !== "playing") return;
+    setChosen(opt);
+    resolve(opt === q.correcta);
+  }
+
+  function submitTyped(e: React.FormEvent) {
+    e.preventDefault();
+    if (phase !== "playing" || !typed.trim()) return;
+    resolve(acceptedAnswers(q).includes(normalize(typed)));
   }
 
   if (preguntas.length < 1) {
     return (
       <div className="card p-6 text-center text-sm text-[var(--muted)]">
-        Agregá al menos una pregunta con dos opciones para jugar.
+        Agregá al menos una pregunta, con dos opciones o con respuesta escrita,
+        para jugar.
       </div>
     );
   }
@@ -93,6 +114,7 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
   }
 
   const pct = (timeLeft / totalSecs) * 100;
+  const showState = phase === "feedback";
 
   return (
     <div className="flex flex-1 flex-col gap-5">
@@ -138,33 +160,72 @@ export function AgilidadMental({ config }: { config: AgilidadMentalConfig }) {
         />
       </div>
 
-      {/* Opciones */}
-      <div className="mt-auto grid grid-cols-1 gap-2 sm:grid-cols-3">
-        {q.opciones.map((op, i) => {
-          if (!op.trim()) return null;
-          const isChosen = chosen === i;
-          const isCorrect = i === q.correcta;
-          const showState = phase === "feedback";
-          return (
-            <button
-              key={i}
-              type="button"
+      {escrita ? (
+        /* Respuesta escrita */
+        <div className="mt-auto flex flex-col gap-2">
+          <form onSubmit={submitTyped} className="flex gap-2">
+            <input
+              key={idx}
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
               disabled={phase !== "playing"}
-              onClick={() => answer(i)}
+              placeholder="Escribí tu respuesta"
+              autoFocus={!preview}
+              autoComplete="off"
               className={cn(
-                "min-h-13 rounded-[var(--radius-tile)] border px-4 py-3 font-semibold uppercase tracking-wide transition-all active:scale-95",
-                showState && isCorrect
-                  ? "border-transparent bg-[var(--good)] text-white"
-                  : showState && isChosen
-                    ? "border-transparent bg-[var(--bad)] text-white"
-                    : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--brand)]",
+                "h-13 min-w-0 flex-1 rounded-full border bg-[var(--surface)] px-5 text-[var(--text)] outline-none transition-colors",
+                "border-[var(--border)] focus:border-[var(--brand)]",
+                showState && acerto && "border-[var(--good)]",
+                showState && !acerto && "animate-shake border-[var(--bad)]",
               )}
-            >
-              {op}
-            </button>
-          );
-        })}
-      </div>
+            />
+            <Button type="submit" size="lg" disabled={phase !== "playing"}>
+              Responder
+            </Button>
+          </form>
+          <p
+            className={cn(
+              "text-center text-sm transition-opacity",
+              showState ? "opacity-100" : "opacity-0",
+            )}
+          >
+            {acerto ? (
+              <span className="font-semibold text-[var(--good)]">¡Correcto!</span>
+            ) : (
+              <span className="text-[var(--muted)]">
+                Era <b className="text-[var(--text)]">{q.respuesta}</b>
+              </span>
+            )}
+          </p>
+        </div>
+      ) : (
+        /* Opciones */
+        <div className="mt-auto grid grid-cols-1 gap-2 sm:grid-cols-3">
+          {q.opciones.map((op, i) => {
+            if (!op.trim()) return null;
+            const isChosen = chosen === i;
+            const isCorrect = i === q.correcta;
+            return (
+              <button
+                key={i}
+                type="button"
+                disabled={phase !== "playing"}
+                onClick={() => answer(i)}
+                className={cn(
+                  "min-h-13 rounded-[var(--radius-tile)] border px-4 py-3 font-semibold uppercase tracking-wide transition-all active:scale-95",
+                  showState && isCorrect
+                    ? "border-transparent bg-[var(--good)] text-white"
+                    : showState && isChosen
+                      ? "border-transparent bg-[var(--bad)] text-white"
+                      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text)] hover:border-[var(--brand)]",
+                )}
+              >
+                {op}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -123,8 +123,15 @@ export function ThemeEditor({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <Field label="Logo (arriba del juego)">
-          <ImageInput value={theme.logoUrl} onChange={(url) => set({ logoUrl: url })} />
+        <Field
+          label="Logo (arriba del juego)"
+          hint="Se muestra a 80 px de alto. Subí SVG o PNG con fondo transparente, recortado sin márgenes: ideal 800×200 px (mínimo 240 px de alto)."
+        >
+          <ImageInput
+            value={theme.logoUrl}
+            onChange={(url) => set({ logoUrl: url })}
+            minHeight={240}
+          />
         </Field>
         <Field label="Imagen de fondo" hint="Opcional. Se aplica sobre el color de fondo.">
           <ImageInput value={theme.bgImageUrl} onChange={(url) => set({ bgImageUrl: url })} />

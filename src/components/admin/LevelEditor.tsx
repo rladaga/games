@@ -251,7 +251,7 @@ function Preview({ level }: { level: Level }) {
             <img
               src={level.theme.logoUrl}
               alt="Logo"
-              className="h-12 w-auto object-contain"
+              className="h-14 w-auto max-w-full object-contain"
             />
           </div>
         ) : null}
@@ -272,7 +272,7 @@ function Preview({ level }: { level: Level }) {
             <AdivinaPersonaje config={level.config as AdivinaPersonajeConfig} preview />
           )}
           {level.gameSlug === "agilidad-mental" && (
-            <AgilidadMental config={level.config as AgilidadMentalConfig} />
+            <AgilidadMental config={level.config as AgilidadMentalConfig} preview />
           )}
           {level.gameSlug === "hechos-historicos" && (
             <HechosHistoricos config={level.config as HechosHistoricosConfig} />
