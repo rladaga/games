@@ -44,6 +44,7 @@ export function themeToCssVars(theme: Theme = {}): Vars {
   if (theme.winnerColor) vars["--winner"] = theme.winnerColor;
   if (theme.popularityColor) vars["--popularity"] = theme.popularityColor;
   if (theme.rankColor) vars["--rank"] = theme.rankColor;
+  if (theme.rankTextColor) vars["--rank-text"] = theme.rankTextColor;
 
   return vars;
 }

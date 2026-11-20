@@ -53,6 +53,8 @@ export interface Theme {
   popularityColor?: string;
   /** Ranking: the position number badge. Falls back to brand. */
   rankColor?: string;
+  /** Ranking: text of each placed item. Falls back to textColor. */
+  rankTextColor?: string;
   logoUrl?: string | null;
   /** Optional title shown under the logo on the game screen. */
   showTitle?: boolean;

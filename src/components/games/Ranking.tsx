@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import type { RankingConfig } from "@/lib/types";
 import { cn, shuffle } from "@/lib/utils";
-import { GameResult } from "./GameResult";
 import { GameImage } from "./GameImage";
 
 interface Item {
@@ -118,7 +117,7 @@ export function Ranking({ config }: { config: RankingConfig }) {
               <span
                 className={cn(
                   "flex-1 truncate font-semibold",
-                  empty ? "text-[var(--muted)]" : "text-[var(--caption)]",
+                  empty ? "text-[var(--muted)]" : "text-[var(--rank-text)]",
                 )}
               >
                 {empty ? "Tocá para ubicar acá" : item?.texto}
@@ -127,14 +126,6 @@ export function Ranking({ config }: { config: RankingConfig }) {
           );
         })}
       </div>
-
-      {done && (
-        <GameResult
-          won
-          title="¡Ranking completo!"
-          reveal="Armaste tu top sin arrepentirte."
-        />
-      )}
     </div>
   );
 }

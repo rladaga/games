@@ -14,11 +14,6 @@
   --border: #2c2c40;
   --text: #f4f4f8;
   --muted: #9a9ab0;
-  /* Semantic text roles. Alias --text by default so they can be overridden per
-     level without changing the base look (see lib/theme.ts). */
-  --heading: var(--text);
-  --caption: var(--text);
-
   --brand: #7c5cff;
   --brand-ink: #ffffff;
   --accent: #ffd166;
@@ -27,17 +22,8 @@
   --warn: #f4c542;
   --bad: #6b7280;
 
-  /* Per-game accents. Alias a base token by default so each game can be
-     retinted independently without changing the base look. */
-  --timeline: var(--brand);
-  --year: var(--heading);
-  --timer: var(--good);
-  --lives: var(--bad);
-  --popularity: var(--accent);
-  --rank: var(--brand);
   --hot: #e5484d;
   --cold: #4f7cff;
-  --winner: var(--good);
 
   --radius: 16px;
   --radius-sm: 10px;
@@ -45,6 +31,27 @@
 
   --font-display: var(--font-display), var(--font-sans), system-ui, sans-serif;
   --font-sans: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Alias tokens. Declared on .game-shell too (not only :root) so they resolve
+   against the level's own --text/--brand/etc. A var() alias is computed where
+   it's declared, so on :root alone it would freeze to the platform defaults.
+   Explicit per-level overrides are inline styles on .game-shell and win. */
+:root,
+.game-shell {
+  /* Semantic text roles (see lib/theme.ts). */
+  --heading: var(--text);
+  --caption: var(--text);
+
+  /* Per-game accents. */
+  --timeline: var(--brand);
+  --year: var(--heading);
+  --timer: var(--good);
+  --lives: var(--bad);
+  --popularity: var(--accent);
+  --rank: var(--brand);
+  --rank-text: var(--text);
+  --winner: var(--good);
 }
 
 @theme inline {

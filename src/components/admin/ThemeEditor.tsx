@@ -31,7 +31,7 @@ const CAPTION: Slot = {
 };
 
 // Games that render captions under thumbnails.
-const CAPTION_GAMES: GameSlug[] = ["hechos-historicos", "ranking"];
+const CAPTION_GAMES: GameSlug[] = ["hechos-historicos"];
 // Only Palabra Clave uses the "wrong position" (yellow) state.
 const WARN_GAMES: GameSlug[] = ["palabra-clave"];
 
@@ -65,7 +65,10 @@ const GAME_SECTIONS: Partial<Record<GameSlug, { title: string; slots: Slot[] }>>
   },
   ranking: {
     title: "Colores de Ranking",
-    slots: [{ key: "rankColor", label: "Número de posición" }],
+    slots: [
+      { key: "rankColor", label: "Número de posición" },
+      { key: "rankTextColor", label: "Texto de cada elemento", hint: "El nombre del elemento ya ubicado." },
+    ],
   },
 };
 
@@ -76,6 +79,7 @@ const ALIAS: Partial<Record<keyof Theme, keyof Theme>> = {
   yearColor: "headingColor",
   timelineColor: "brandColor",
   rankColor: "brandColor",
+  rankTextColor: "textColor",
   timerColor: "goodColor",
   livesColor: "badColor",
   popularityColor: "accentColor",
